@@ -1,19 +1,18 @@
 
 import { Component, AfterViewInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Observable, Subject, timer, Subscription, interval } from 'rxjs';
 import { filter, pairwise, repeat, take } from 'rxjs/operators';
 
-import {MatSnackBar} from '@angular/material/snack-bar';
-
-import {utc} from 'moment/moment';
+import { utc, Moment } from 'moment/moment';
 
 
 const doubleClicks =
 (observable: Observable<MouseEvent>):
 Observable<MouseEvent[]> => {
 
-    const obs = observable.pipe(
+    const obs: Observable<MouseEvent[]> = observable.pipe(
         pairwise(),
         filter(
             (v: Array<MouseEvent>) =>
@@ -36,54 +35,36 @@ export class AppComponent  implements AfterViewInit {
 
     private subject: Subject<MouseEvent> = new Subject()
     private observable: Observable<MouseEvent> = this.subject.asObservable()
-
     private timer: Subscription
 
-    doubleclicked: boolean = false
-    clicks: number = 0
-    secondsPassed: number = 0
-    isPaused: boolean = false
-    isStarted: boolean = false
-    // humanizedTime: string = "00:00:00"
+    private doubleclicked: boolean = false
+    private isPaused: boolean = false
+    public isStarted: boolean = false
+    public pauseButtonClicks: number = 0
+    private secondsPassed: number = 0
 
-    get timerRestartLabel() {
+    public get timerRestartLabel(): string {
         if (!this.isStarted || this.isPaused) return "Start timer"
         if (this.isStarted) return "Stop timer"
         return "Start timer"
     }
 
-    get humanizedTime() {
-        let formattedTime: any = utc(this.secondsPassed*1000)
-        formattedTime = formattedTime.format('HH:mm:ss')
-        return formattedTime
+    public get formattedTime(): string {
+        let time: Moment | string = utc(this.secondsPassed*1000)
+        time = time.format('HH:mm:ss')
+        return time
     }
 
+    constructor(private notification: MatSnackBar) {}
 
-
-    constructor(private _snackBar: MatSnackBar) {}
-
-    pause() {
-        this.doubleclicked = true
-        this.clicks++
-        if (!this.isPaused) {
-        this.timer.unsubscribe()
-        this.isPaused = true
-        this.notifyWith('Paused')
-        } else {
-            this.notifyWith('Resumed')
-            this.isPaused = false
-            this.timer.unsubscribe()
-            this.startTimer()
-        }
-    }
-
-    notifyWith(message: string) {
-        this._snackBar.open(message, 'Close', {
+    notifyWith(message: string): void {
+        this.notification
+        .open(message, 'Close', {
             duration: 1000
-          });
+        })
     }
 
-    detectDoubleClicks() {
+    detectDoubleClicks(): void {
         doubleClicks(this.observable)
         .subscribe(
             (e: MouseEvent[]) =>
@@ -91,69 +72,84 @@ export class AppComponent  implements AfterViewInit {
         )
     }
 
-    ngAfterViewInit(): void {
-        this.detectDoubleClicks()
+    notifyToDoubleClick(): void {
+        timer(300).subscribe( () => {
+            if (this.doubleclicked) return
+            this.notifyWith(
+                `Double click to
+                ${this.isPaused ? 'resume': 'pause'}`
+            )
+        })
+    }
 
-        // console.log(format(50000000, 'hh:mm:ss'));
+    pause(): void {
+
+        this.doubleclicked = true
+        this.pauseButtonClicks++
+        this.timer.unsubscribe()
+        if (!this.isPaused) {
+            this.isPaused = true
+            this.notifyWith('Paused')
+        } else {
+            this.startCounting()
+            this.isPaused = false
+            this.notifyWith('Resumed')
+        }
 
     }
 
-    notifyToDoubleClick() {
-        timer(300).subscribe(
-            (e: any) => {
-                if (this.doubleclicked) return
-                this.notifyWith(
-                    `Double click to
-                    ${this.isPaused ? 'resume': 'pause'}`
-                )
-            }
-        )
-    }
-
-    pauseButtonClick(event: MouseEvent) {
+    pauseButtonClick(event: MouseEvent): void {
         this.doubleclicked = false
         this.notifyToDoubleClick()
         this.subject.next(event)
     }
 
-    startTimer() {
+    startCounting(): void {
         this.timer = interval(1000).subscribe(
             e => {this.secondsPassed++}
         )
     }
 
-    restartTimer() {
+    restartStopwatch(): void {
         this.isPaused = false
         this.secondsPassed = 0
-        this.clicks = 0
+        this.pauseButtonClicks = 0
         this.timer.unsubscribe()
-        this.startTimer()
+        this.startCounting()
         this.notifyWith('Restarted')
     }
 
-    startOrStopTimer() {
+    stopStopwatch(): void {
+        this.isStarted = false
+        this.secondsPassed = 0
+        this.timer.unsubscribe()
+        this.notifyWith('Stopped')
+    }
+
+    startOrStopStopwatch(): void {
+        this.startCounting()
+        this.notifyWith('Started')
+        this.isStarted = !this.isStarted
+    }
+
+    handleStopStopwatch(): void {
 
         if (this.isPaused) {
-            this.secondsPassed = 0
-            this.timer.unsubscribe()
-            this.startTimer()
-            this.clicks = 0
-            this.isPaused = false
-            this.notifyWith('Restarted')
+            this.restartStopwatch()
             return
         }
 
         if (this.isStarted) {
-            this.isStarted = false
-            this.secondsPassed = 0
-            this.timer.unsubscribe()
-            this.notifyWith('Stopped')
+            this.stopStopwatch()
             return
         }
-        this.startTimer()
-        this.notifyWith('Started')
 
-        this.isStarted = !this.isStarted
+        this.startOrStopStopwatch()
+
+    }
+
+    ngAfterViewInit(): void {
+        this.detectDoubleClicks()
     }
 
 }

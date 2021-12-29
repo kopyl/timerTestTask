@@ -3,14 +3,14 @@
 <section>
 
 
-    <h1>{{humanizedTime}}</h1>
+    <h1>{{formattedTime}}</h1>
 
     <button
 
         class="restart"
         mat-flat-button
         color="primary"
-        (click)=startOrStopTimer()
+        (click)=handleStopStopwatch()
 
     >
 
@@ -29,7 +29,7 @@
 
     >
 
-        {{ clicks%2==0 ? 'Pause': 'Resume' }}
+        {{ pauseButtonClicks%2==0 ? 'Pause': 'Resume' }}
 
     </button>
 
@@ -38,7 +38,7 @@
 
     class="wait"
     mat-flat-button
-    (click)=restartTimer()
+    (click)=restartStopwatch()
     [disabled]="!isStarted"
 
     >
