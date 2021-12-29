@@ -5,18 +5,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, Subject, timer, Subscription, interval } from 'rxjs';
 import { filter, pairwise, repeat, take } from 'rxjs/operators';
 
-import { utc, Moment } from 'moment/moment';
+
+type Tuple<A, B=A> = [A, B]
 
 
 const doubleClicks =
 (observable: Observable<MouseEvent>):
-Observable<MouseEvent[]> => {
+Observable<Tuple<MouseEvent>> => {
 
-    const obs: Observable<MouseEvent[]> = observable.pipe(
+    const obs: Observable<Tuple<MouseEvent>> = observable.pipe(
         pairwise(),
         filter(
-            (v: Array<MouseEvent>) =>
-            v[1].timeStamp - v[0].timeStamp <= 300
+            v => v[1].timeStamp - v[0].timeStamp <= 300
         ),
         take(1),
         repeat()
@@ -38,22 +38,11 @@ export class AppComponent  implements AfterViewInit {
     private timer: Subscription
 
     private doubleclicked: boolean = false
-    private isPaused: boolean = false
+    public isPaused: boolean = false
     public isStarted: boolean = false
-    public pauseButtonClicks: number = 0
     private secondsPassed: number = 0
-
-    public get timerRestartLabel(): string {
-        if (!this.isStarted || this.isPaused) return "Start timer"
-        if (this.isStarted) return "Stop timer"
-        return "Start timer"
-    }
-
-    public get formattedTime(): string {
-        let time: Moment | string = utc(this.secondsPassed*1000)
-        time = time.format('HH:mm:ss')
-        return time
-    }
+    public timerRestartLabel: string = "Start timer"
+    public formattedTime: string = "00:00:00"
 
     constructor(private notification: MatSnackBar) {}
 
@@ -64,7 +53,28 @@ export class AppComponent  implements AfterViewInit {
         })
     }
 
-    detectDoubleClicks(): void {
+    getFormattedTimeFromSec(): string {
+        let hours: number | string = this.secondsPassed / 3600
+        let secs: number | string = this.secondsPassed % 60
+        let mins: number | string = this.secondsPassed / 60 % 60
+
+        hours = Math.floor(hours)
+        mins = Math.floor(mins)
+
+        hours = String(hours).padStart(2, "0")
+        mins = String(mins).padStart(2, "0")
+        secs = String(secs).padStart(2, "0")
+
+        return `${hours}:${mins}:${secs}`
+    }
+
+    updateTime(reset=false) {
+        this.secondsPassed++
+        reset ? this.secondsPassed = 0 : null
+        this.formattedTime = this.getFormattedTimeFromSec()
+    }
+
+    subscribeOnDoubleClicks(): void {
         doubleClicks(this.observable)
         .subscribe(
             (e: MouseEvent[]) =>
@@ -85,7 +95,6 @@ export class AppComponent  implements AfterViewInit {
     pause(): void {
 
         this.doubleclicked = true
-        this.pauseButtonClicks++
         this.timer.unsubscribe()
         if (!this.isPaused) {
             this.isPaused = true
@@ -106,14 +115,13 @@ export class AppComponent  implements AfterViewInit {
 
     startCounting(): void {
         this.timer = interval(1000).subscribe(
-            e => {this.secondsPassed++}
+            e => {this.updateTime()}
         )
     }
 
     restartStopwatch(): void {
         this.isPaused = false
-        this.secondsPassed = 0
-        this.pauseButtonClicks = 0
+        this.updateTime(true)
         this.timer.unsubscribe()
         this.startCounting()
         this.notifyWith('Restarted')
@@ -121,7 +129,7 @@ export class AppComponent  implements AfterViewInit {
 
     stopStopwatch(): void {
         this.isStarted = false
-        this.secondsPassed = 0
+        this.updateTime(true)
         this.timer.unsubscribe()
         this.notifyWith('Stopped')
     }
@@ -149,7 +157,7 @@ export class AppComponent  implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.detectDoubleClicks()
+        this.subscribeOnDoubleClicks()
     }
 
 }

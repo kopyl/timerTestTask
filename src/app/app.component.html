@@ -14,7 +14,7 @@
 
     >
 
-        {{timerRestartLabel}}
+        {{isPaused || !isStarted ? 'Start timer' : 'Stop timer'}}
 
     </button>
 
@@ -29,7 +29,7 @@
 
     >
 
-        {{ pauseButtonClicks%2==0 ? 'Pause': 'Resume' }}
+        {{ isPaused ? 'Resume' : 'Pause' }}
 
     </button>
 
