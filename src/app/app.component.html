@@ -1,0 +1,51 @@
+
+
+<section>
+
+
+    <h1>{{humanizedTime}}</h1>
+
+    <button
+
+        class="restart"
+        mat-flat-button
+        color="primary"
+        (click)=startOrStopTimer()
+
+    >
+
+        {{timerRestartLabel}}
+
+    </button>
+
+
+    <button
+
+        class="resume-pause"
+        (click)=pauseButtonClick($event)
+        mat-flat-button
+        color="accent"
+        [disabled]="!isStarted"
+
+    >
+
+        {{ clicks%2==0 ? 'Pause': 'Resume' }}
+
+    </button>
+
+
+    <button
+
+    class="wait"
+    mat-flat-button
+    (click)=restartTimer()
+    [disabled]="!isStarted"
+
+    >
+
+        Reset
+
+    </button>
+
+
+</section>
