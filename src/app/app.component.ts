@@ -55,17 +55,13 @@ export class AppComponent  implements AfterViewInit {
 
     getFormattedTimeFromSec(): string {
         let hours: number | string = this.secondsPassed / 3600
-        let secs: number | string = this.secondsPassed % 60
-        let mins: number | string = this.secondsPassed / 60 % 60
-
         hours = Math.floor(hours)
-        mins = Math.floor(mins)
-
         hours = String(hours).padStart(2, "0")
-        mins = String(mins).padStart(2, "0")
-        secs = String(secs).padStart(2, "0")
 
-        return `${hours}:${mins}:${secs}`
+        const minAndSec: string = new Date(this.secondsPassed * 1000)
+        .toISOString().substr(14, 5)
+
+        return `${hours}:${minAndSec}`
     }
 
     updateTime(reset=false) {
