@@ -59,7 +59,7 @@ export class AppComponent  implements AfterViewInit {
         hours = String(hours).padStart(2, "0")
 
         const minAndSec: string = new Date(this.secondsPassed * 1000)
-        .toISOString().substr(14, 5)
+        .toISOString().substring(14, 19)
 
         return `${hours}:${minAndSec}`
     }
