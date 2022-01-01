@@ -74,7 +74,7 @@ export class AppComponent  implements AfterViewInit {
         doubleClicks(this.observable)
         .subscribe(
             (e: MouseEvent[]) =>
-            { this.pause() }
+            { this.pauseOrResume() }
         )
     }
 
@@ -88,7 +88,7 @@ export class AppComponent  implements AfterViewInit {
         })
     }
 
-    pause(): void {
+    pauseOrResume(): void {
 
         this.doubleclicked = true
         this.timer.unsubscribe()
