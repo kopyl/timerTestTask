@@ -5,15 +5,14 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Observable, Subject, timer, Subscription, interval } from 'rxjs';
 import { filter, pairwise, repeat, take } from 'rxjs/operators';
 
-
-type Tuple<A, B=A> = [A, B]
+import { doubleClicks } from './types'
 
 
 const doubleClicks =
 (observable: Observable<MouseEvent>):
-Observable<Tuple<MouseEvent>> => {
+doubleClicks => {
 
-    const obs: Observable<Tuple<MouseEvent>> = observable.pipe(
+    const obs: doubleClicks = observable.pipe(
         pairwise(),
         filter(
             v => v[1].timeStamp - v[0].timeStamp <= 300
@@ -31,7 +30,7 @@ Observable<Tuple<MouseEvent>> => {
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.sass']
 })
-export class AppComponent  implements AfterViewInit {
+export class AppComponent implements AfterViewInit {
 
     private subject: Subject<MouseEvent> = new Subject()
     private observable: Observable<MouseEvent> = this.subject.asObservable()
