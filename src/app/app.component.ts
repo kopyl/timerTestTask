@@ -41,7 +41,6 @@ export class AppComponent implements AfterViewInit {
     public isStarted: boolean = false
     public secondsPassed: number = 0
     public timerRestartLabel: string = "Start timer"
-    public formattedTime: string = "00:00:00"
 
     constructor(private notification: MatSnackBar) {}
 
