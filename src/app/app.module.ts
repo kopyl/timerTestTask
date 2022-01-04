@@ -7,15 +7,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatButtonModule} from '@angular/material/button'
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 
+import { HhmmssPipe } from './hhmmssPipe/hhmmss.pipe'
+
 @NgModule({
   declarations: [
     AppComponent,
+    HhmmssPipe
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     MatButtonModule,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

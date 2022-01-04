@@ -39,7 +39,7 @@ export class AppComponent implements AfterViewInit {
     private doubleclicked: boolean = false
     public isPaused: boolean = false
     public isStarted: boolean = false
-    private secondsPassed: number = 0
+    public secondsPassed: number = 0
     public timerRestartLabel: string = "Start timer"
     public formattedTime: string = "00:00:00"
 
@@ -52,21 +52,9 @@ export class AppComponent implements AfterViewInit {
         })
     }
 
-    getFormattedTimeFromSec(): string {
-        let hours: number | string = this.secondsPassed / 3600
-        hours = Math.floor(hours)
-        hours = String(hours).padStart(2, "0")
-
-        const minAndSec: string = new Date(this.secondsPassed * 1000)
-        .toISOString().substring(14, 19)
-
-        return `${hours}:${minAndSec}`
-    }
-
     updateTime(reset=false) {
         this.secondsPassed++
         reset ? this.secondsPassed = 0 : null
-        this.formattedTime = this.getFormattedTimeFromSec()
     }
 
     subscribeOnDoubleClicks(): void {
