@@ -1,55 +1,33 @@
-
-
 <section>
-
-
     <h1>{{formattedTime}}</h1>
 
-    <div class="buttons">
-
+    <div class=buttons>
         <button
-
-            class="restart"
+            class=restart
             mat-flat-button
-            color="primary"
+            color=primary
             (click)=handleStopStopwatch()
-
         >
-
             {{isPaused || !isStarted ? 'Start timer' : 'Stop timer'}}
-
         </button>
 
-
         <button
-
-            class="resume-pause"
+            class=resume-pause
             (click)=pauseButtonClick($event)
             mat-flat-button
-            color="accent"
-            [disabled]="!isStarted"
-
+            color=accent
+            [disabled]=!isStarted
         >
-
             {{ isPaused ? 'Resume' : 'Pause' }}
-
         </button>
-
 
         <button
-
-        class="wait"
-        mat-flat-button
-        (click)=restartStopwatch()
-        [disabled]="!isStarted"
-
+            class=wait
+            mat-flat-button
+            (click)=restartStopwatch()
+            [disabled]=!isStarted
         >
-
             Reset
-
         </button>
-
     </div>
-
-
 </section>
