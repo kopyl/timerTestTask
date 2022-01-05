@@ -33,7 +33,6 @@ doubleClicks => {
 export class AppComponent implements AfterViewInit {
 
     private subject: Subject<MouseEvent> = new Subject()
-    private observable: Observable<MouseEvent> = this.subject.asObservable()
     private timer: Subscription
 
     private doubleclicked: boolean = false
@@ -57,11 +56,12 @@ export class AppComponent implements AfterViewInit {
     }
 
     subscribeOnDoubleClicks(): void {
-        doubleClicks(this.observable)
+        doubleClicks(this.subject)
         .subscribe(
             (e: MouseEvent[]) =>
             { this.pauseOrResume() }
         )
+
     }
 
     notifyToDoubleClick(): void {
