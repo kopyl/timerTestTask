@@ -12,7 +12,7 @@ const doubleClicks$ =
 (observable$: Observable<MouseEvent>):
 doubleClicks => {
 
-    const obs: doubleClicks = observable$.pipe(
+    const obs$: doubleClicks = observable$.pipe(
         pairwise(),
         filter(
             v => v[1].timeStamp - v[0].timeStamp <= 300
@@ -20,7 +20,7 @@ doubleClicks => {
         take(1),
         repeat()
     )
-    return obs
+    return obs$
 
 }
 
