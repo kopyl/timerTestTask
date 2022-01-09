@@ -8,11 +8,11 @@ import { filter, pairwise, repeat, take } from 'rxjs/operators';
 import { doubleClicks } from './types'
 
 
-const doubleClicks =
-(observable: Observable<MouseEvent>):
+const doubleClicks$ =
+(observable$: Observable<MouseEvent>):
 doubleClicks => {
 
-    const obs: doubleClicks = observable.pipe(
+    const obs: doubleClicks = observable$.pipe(
         pairwise(),
         filter(
             v => v[1].timeStamp - v[0].timeStamp <= 300
@@ -32,7 +32,7 @@ doubleClicks => {
 })
 export class AppComponent implements AfterViewInit {
 
-    private subject: Subject<MouseEvent> = new Subject()
+    private doubleClicks$: Subject<MouseEvent> = new Subject()
     private timer: Subscription
 
     private doubleclicked: boolean = false
@@ -56,7 +56,7 @@ export class AppComponent implements AfterViewInit {
     }
 
     subscribeOnDoubleClicks(): void {
-        doubleClicks(this.subject)
+        doubleClicks$(this.doubleClicks$)
         .subscribe( _ => { this.pauseOrResume() } )
     }
 
@@ -88,7 +88,7 @@ export class AppComponent implements AfterViewInit {
     pauseButtonClick(event: MouseEvent): void {
         this.doubleclicked = false
         this.notifyToDoubleClick()
-        this.subject.next(event)
+        this.doubleClicks$.next(event)
     }
 
     startCounting(): void {
