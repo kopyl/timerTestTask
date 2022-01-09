@@ -57,11 +57,7 @@ export class AppComponent implements AfterViewInit {
 
     subscribeOnDoubleClicks(): void {
         doubleClicks(this.subject)
-        .subscribe(
-            (e: MouseEvent[]) =>
-            { this.pauseOrResume() }
-        )
-
+        .subscribe( _ => { this.pauseOrResume() } )
     }
 
     notifyToDoubleClick(): void {
