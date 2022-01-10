@@ -7,6 +7,12 @@ import { filter, pairwise, repeat, take } from 'rxjs/operators';
 
 import { doubleClicks } from './types'
 
+import { cached } from './localstorage'
+
+
+
+
+
 
 const doubleClicks$ =
 (observable$: Observable<MouseEvent>):
@@ -33,13 +39,12 @@ doubleClicks => {
 export class AppComponent implements AfterViewInit {
 
     private doubleClicks$: Subject<MouseEvent> = new Subject()
-    private timer: Subscription
+    private timer: Subscription = timer(Infinity).subscribe()
 
     private doubleclicked: boolean = false
-    public isPaused: boolean = false
-    public isStarted: boolean = false
-    public secondsPassed: number = 0
-    public timerRestartLabel: string = "Start timer"
+    @cached() public isPaused: boolean = false
+    @cached() public isStarted: boolean = false
+    @cached() public secondsPassed: number = 0
 
     constructor(private notification: MatSnackBar) {}
 
@@ -136,6 +141,10 @@ export class AppComponent implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.subscribeOnDoubleClicks()
+
+        if (this.isStarted && !this.isPaused) {
+            this.startCounting()
+        }
     }
 
 }
