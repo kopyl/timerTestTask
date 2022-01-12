@@ -45,6 +45,22 @@ const getLSValue = (componentName: string, key: string) => {
     return appValue
 }
 
+const InitComponentLS = (componentName: string) => {
+    let AngularLS: Object
+
+    if (!checkAngularLS()) {
+        AngularLS = createAngularLS()
+    } else {
+        AngularLS = getAngularLS()
+    }
+
+    if (!checkComponentLS(AngularLS, componentName)) {
+        createComponentLS(AngularLS, componentName)
+    } else {
+        getComponentLS(AngularLS, componentName)
+    }
+}
+
 
 export const cached = (): any => {
 
@@ -52,20 +68,7 @@ export const cached = (): any => {
 
         const componentName = target.constructor.name
 
-        let AngularLS: Object
-        let componentLS: Object
-
-        if (!checkAngularLS()) {
-            AngularLS = createAngularLS()
-        } else {
-            AngularLS = getAngularLS()
-        }
-
-        if (!checkComponentLS(AngularLS, componentName)) {
-            componentLS = createComponentLS(AngularLS, componentName)
-        } else {
-            componentLS = getComponentLS(AngularLS, componentName)
-        }
+        InitComponentLS(componentName)
 
         let val: any = target[key]
         let setTimes = 0
