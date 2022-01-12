@@ -1,16 +1,16 @@
+
+const getAngularLS = () => {
+    let AngularLS: any = window.localStorage.getItem('AngularLS')
+    return JSON.parse(AngularLS)
+}
+
 const checkAngularLS = () => {
-    return Boolean(window.localStorage.getItem('AngularLS'))
+    return Boolean(getAngularLS())
 }
 
 const createAngularLS = (): Object => {
     const AngularLS = {}
     window.localStorage.setItem('AngularLS', JSON.stringify(AngularLS))
-    return AngularLS
-}
-
-const getAngularLS = () => {
-    let AngularLS: any = window.localStorage.getItem('AngularLS')
-    AngularLS = JSON.parse(AngularLS)
     return AngularLS
 }
 
@@ -30,16 +30,14 @@ const getComponentLS = (AngularLS: object, componentName: string): Object => {
 }
 
 const setLSValue = (componentName: string, key: string, value: any) => {
-    let localStorage = window.localStorage.getItem('AngularLS')
-    localStorage = JSON.parse(localStorage)
+    let localStorage = getAngularLS()
     const componentLS = localStorage[componentName]
     componentLS[key] = value
     window.localStorage.setItem('AngularLS', JSON.stringify(localStorage))
 }
 
 const getLSValue = (componentName: string, key: string) => {
-    let localStorage = window.localStorage.getItem('AngularLS')
-    localStorage = JSON.parse(localStorage)
+    let localStorage = getAngularLS()
     const componentLS = localStorage[componentName]
     const appValue = componentLS[key]
     return appValue
