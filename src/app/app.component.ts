@@ -39,7 +39,7 @@ doubleClicks => {
 export class AppComponent implements AfterViewInit {
 
     private doubleClicks$: Subject<MouseEvent> = new Subject()
-    private timer: Subscription = timer(Infinity).subscribe()
+    private timer: Subscription = new Subscription()
 
     private doubleclicked: boolean = false
     @cached() public isPaused: boolean = false
