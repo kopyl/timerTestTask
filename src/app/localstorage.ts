@@ -71,24 +71,18 @@ export const cached = (): any => {
         let setTimes = 0
 
         const getter = () => {
-
             let localStorageVal = getLSValue(componentName, key)
             return localStorageVal ?? val
-
         }
 
         const setter = (newVal: any) => {
-
             setTimes++
             let localStorageVal = getLSValue(componentName, key)
 
-            if (setTimes === 1) {
-                val = localStorageVal ?? newVal
-                return
-            }
+            val = localStorageVal ?? newVal
+            if (setTimes === 1) return
 
             setLSValue(componentName, key, newVal)
-
             val = newVal
         }
 
