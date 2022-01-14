@@ -42,6 +42,7 @@ export class AppComponent implements AfterViewInit {
     private timer: Subscription = new Subscription()
 
     private doubleclicked: boolean = false
+
     @cached() public isPaused: boolean = false
     @cached() public isStarted: boolean = false
     @cached() public secondsPassed: number = 0
