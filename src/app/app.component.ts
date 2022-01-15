@@ -53,6 +53,7 @@ export class AppComponent implements AfterViewInit {
         this.notification
         .open(message, 'Close', {
             duration: 1000,
+            panelClass: ['blue-snackbar']
         })
     }
 
