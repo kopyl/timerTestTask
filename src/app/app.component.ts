@@ -52,7 +52,7 @@ export class AppComponent implements AfterViewInit {
     notifyWith(message: string): void {
         this.notification
         .open(message, 'Close', {
-            duration: 1000
+            duration: 1000,
         })
     }
 
