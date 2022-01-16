@@ -21,3 +21,9 @@ It has to have following buttons:
 * Use Observables in the code
 * Use RxJS approach
 * Functional approach
+
+
+## Additional features i implemented
+
+* LocalStorage caching – the status of the stopwatch and its values remain the same after the website's refresh
+* Responsive and adaptive (mobile ready)
